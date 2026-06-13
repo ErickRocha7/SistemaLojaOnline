@@ -11,28 +11,75 @@ import com.store.view.StoreView;
 
 import java.util.*;
 
+/**
+ * <h1>Controlador principal do sistema de loja online</h1>
+ * Esta classe orquestra as operações do sistema, conectando a camada de
+ * visualização ({@code StoreView}) com os modelos e repositórios. Ela contém
+ * exemplos práticos de quase todos os capítulos do livro.
+ *
+ * <h2>Capítulos abordados neste arquivo:</h2>
+ * <ul>
+ * <li><b>Capítulo 2:</b> Entrada/saída via métodos da view, operadores
+ * aritméticos.</li>
+ * <li><b>Capítulo 3:</b> Criação de objetos, chamadas de métodos, manipulação
+ * de strings.</li>
+ * <li><b>Capítulo 4:</b> Estruturas de repetição (while, for-each) e seleção
+ * (if, if-else, switch).</li>
+ * <li><b>Capítulo 5:</b> Operadores lógicos (&&, ||, !) em expressões
+ * condicionais.</li>
+ * <li><b>Capítulo 6:</b> Declaração e invocação de métodos
+ * (privados/públicos).</li>
+ * <li><b>Capítulo 7:</b> Uso de ArrayList e conversão para array.</li>
+ * <li><b>Capítulo 8:</b> Atributos final, construtor, referência this
+ * implícita.</li>
+ * <li><b>Capítulo 9:</b> Herança (Product -> Book/Electronics).</li>
+ * <li><b>Capítulo 10:</b> Polimorfismo (OrderComponent, Discountable,
+ * UndoAction).</li>
+ * <li><b>Capítulo 11:</b> Tratamento de exceções com try-catch, throw e
+ * exceções customizadas.</li>
+ * <li><b>Capítulo 14:</b> Busca com regex via método matchesKeyword.</li>
+ * <li><b>Capítulo 16:</b> Coleções genéricas (ArrayList,
+ * Comparator.comparing).</li>
+ * <li><b>Capítulo 18:</b> Recursão (fatorial e busca binária recursiva).</li>
+ * <li><b>Capítulo 20:</b> Uso de métodos genéricos
+ * (MathUtil.recursiveBinarySearch).</li>
+ * <li><b>Capítulo 21:</b> Uso da pilha genérica personalizada Stack.</li>
+ * </ul>
+ */
 public class StoreController {
+    // Capítulo 8: atributos final (constantes de referência)
     private final StoreView view;
     private final GenericRepository<Product> productRepo;
-    private final Stack<UndoAction> undoStack;
-    private final List<OrderComponent> orders;
+    private final Stack<UndoAction> undoStack; // Capítulo 21: estrutura genérica personalizada
+    private final List<OrderComponent> orders; // Capítulo 7 e 16: ArrayList (listas genéricas)
 
+    /**
+     * Construtor padrão.
+     * <b>Capítulo 3:</b> criação de objetos com new.
+     * <b>Capítulo 7:</b> inicialização de ArrayList.
+     */
     public StoreController() {
         view = new StoreView();
         productRepo = new GenericRepository<>();
         undoStack = new Stack<>();
-        orders = new ArrayList<>();
+        orders = new ArrayList<>(); // Capítulo 7/16: ArrayList
     }
 
+    /**
+     * Método principal de execução do programa.
+     * <b>Capítulo 4:</b> loop while, switch-case.
+     * <b>Capítulo 5:</b> operador lógico ! (NOT) em !exit.
+     * <b>Capítulo 11:</b> bloco try-catch genérico para capturar exceções.
+     */
     public void run() {
-        boolean exit = false;
-        while (!exit) {
+        boolean exit = false; // Capítulo 2: declaração e inicialização de variável
+        while (!exit) { // Capítulo 4: while; Capítulo 5: !
             try {
-                int option = view.showMainMenu();
-                switch (option) {
+                int option = view.showMainMenu(); // Capítulo 2: entrada de dados via teclado (Scanner interno)
+                switch (option) { // Capítulo 4: switch
                     case 1:
                         manageProducts();
-                        break;
+                        break; // Capítulo 4: break
                     case 2:
                         createOrder();
                         break;
@@ -46,17 +93,21 @@ public class StoreController {
                         recursiveBinarySearchDemo();
                         break;
                     case 6:
-                        exit = true;
+                        exit = true; // Capítulo 2: atribuição
                         break;
-                    default:
+                    default: // Capítulo 4: cláusula default
                         view.showMessage("Opção inválida!");
                 }
-            } catch (Exception e) {
-                view.showMessage("Erro: " + e.getMessage());
+            } catch (Exception e) { // Capítulo 11: captura de exceção
+                view.showMessage("Erro: " + e.getMessage()); // Capítulo 3: concatenação de strings
             }
         }
     }
 
+    /**
+     * Submenu de gerenciamento de produtos.
+     * <b>Capítulo 4:</b> while, switch.
+     */
     private void manageProducts() {
         boolean back = false;
         while (!back) {
@@ -89,75 +140,115 @@ public class StoreController {
         }
     }
 
+    /**
+     * Adiciona um novo produto (Book ou Electronics) ao repositório.
+     *
+     * <b>Capítulo 2:</b> leitura de inteiro, double e string.
+     * <b>Capítulo 4:</b> if-else para decidir tipo.
+     * <b>Capítulo 9:</b> herança – Product é superclasse abstrata.
+     * <b>Capítulo 10:</b> polimorfismo – referência Product pode apontar para Book
+     * ou Electronics.
+     * <b>Capítulo 21:</b> push na pilha de desfazer (UndoAction).
+     */
     private void addProduct() {
         view.showMessage("\n1. Livro  2. Eletrônico");
-        int type = view.readInt("Tipo: ");
-        String name = view.readString("Nome: ");
-        double price = view.readDouble("Preço: ");
-        Product product;
-        if (type == 1) {
+        int type = view.readInt("Tipo: "); // Capítulo 2: entrada de inteiro
+        String name = view.readString("Nome: "); // Capítulo 2/3: leitura de string
+        double price = view.readDouble("Preço: "); // Capítulo 2: leitura de double
+        Product product; // Capítulo 10: referência polimórfica
+        if (type == 1) { // Capítulo 4: if-else
             String author = view.readString("Autor: ");
             String isbn = view.readString("ISBN: ");
-            product = new Book(name, price, author, isbn);
+            product = new Book(name, price, author, isbn); // Capítulo 9: instanciação de subclasse
         } else {
             String brand = view.readString("Marca: ");
             int warranty = view.readInt("Garantia (meses): ");
             product = new Electronics(name, price, brand, warranty);
         }
-        productRepo.add(product);
+        productRepo.add(product); // Capítulo 16: coleção genérica
         UndoAction action = new AddProductAction(product, productRepo);
-        undoStack.push(action);
+        undoStack.push(action); // Capítulo 21: uso da pilha
         view.showMessage("Produto adicionado: " + product.getId());
     }
 
+    /**
+     * Lista todos os produtos cadastrados.
+     * <b>Capítulo 7:</b> uso de ArrayList retornado por getAll().
+     */
     private void listProducts() {
         view.displayProducts(productRepo.getAll());
     }
 
+    /**
+     * Busca produto por ID e exibe. Se não encontrado, lança exceção customizada.
+     * <b>Capítulo 11:</b> throw e catch de ProductNotFoundException.
+     * <b>Capítulo 4:</b> if-else.
+     */
     private void searchById() {
         String id = view.readString("ID do produto: ");
         Product p = productRepo.get(id);
-        if (p != null) {
+        if (p != null) { // Capítulo 5: operador !=
             view.displayProduct(p);
         } else {
             try {
-                throw new ProductNotFoundException(id);
-            } catch (ProductNotFoundException e) {
+                throw new ProductNotFoundException(id); // Capítulo 11: lançamento de exceção
+            } catch (ProductNotFoundException e) { // Capítulo 11: captura
                 view.showMessage(e.getMessage());
             }
         }
     }
 
+    /**
+     * Busca produtos cujo nome ou ID correspondam a uma palavra-chave (regex).
+     * <b>Capítulo 14:</b> uso de expressões regulares via {@code matchesKeyword()}.
+     * <b>Capítulo 7:</b> iteração sobre ArrayList com for-each.
+     * <b>Capítulo 5:</b> operador lógico de curto-circuito {@code ||} dentro do
+     * método matchesKeyword.
+     */
     private void searchByKeyword() {
-        String keyword = view.readString("Palavra-chave (regex permitida): ");
-        List<Product> all = productRepo.getAll();
-        boolean found = false;
-        for (Product p : all) {
-            if (p.matchesKeyword(keyword)) {
+        String keyword = view.readString("Palavra-chave (regex permitida): "); // Capítulo 14
+        List<Product> all = productRepo.getAll(); // Capítulo 16: retorna ArrayList<Product>
+        boolean found = false; // Capítulo 2: inicialização
+        for (Product p : all) { // Capítulo 7: enhanced for (for-each)
+            if (p.matchesKeyword(keyword)) { // Capítulo 14: Pattern/Matcher internamente
                 view.displayProduct(p);
-                found = true;
+                found = true; // Capítulo 2: atribuição
             }
         }
-        if (!found)
+        if (!found) { // Capítulo 5: operador !
             view.showMessage("Nenhum produto corresponde.");
+        }
     }
 
+    /**
+     * Aplica desconto a um produto, se ele implementar a interface
+     * {@code Discountable}.
+     * <b>Capítulo 10:</b> operador {@code instanceof} e casting para interface.
+     * <b>Capítulo 3:</b> uso de {@code String.format} para formatar valor
+     * monetário.
+     */
     private void applyDiscount() {
         String id = view.readString("ID do produto: ");
         Product p = productRepo.get(id);
-        if (p == null) {
+        if (p == null) { // Capítulo 5: comparação ==
             view.showMessage("Produto não encontrado.");
-            return;
+            return; // Capítulo 6: retorno antecipado
         }
-        if (p instanceof Discountable) {
-            double perc = view.readDouble("Percentual de desconto: ");
-            ((Discountable) p).applyDiscount(perc);
-            view.showMessage("Desconto aplicado. Novo preço: R$ " + String.format("%.2f", p.getPrice()));
+        if (p instanceof Discountable) { // Capítulo 10: verificação de tipo em tempo de execução
+            double perc = view.readDouble("Percentual de desconto: "); // Capítulo 2
+            ((Discountable) p).applyDiscount(perc); // Capítulo 10: downcasting para interface
+            view.showMessage("Desconto aplicado. Novo preço: R$ " +
+                    String.format("%.2f", p.getPrice())); // Capítulo 3: String.format
         } else {
             view.showMessage("Este produto não aceita desconto.");
         }
     }
 
+    /**
+     * Remove um produto e registra ação para possível desfazer.
+     * <b>Capítulo 21:</b> push na pilha.
+     * <b>Capítulo 7:</b> remoção de elemento da lista interna do repositório.
+     */
     private void removeProduct() {
         String id = view.readString("ID do produto: ");
         Product p = productRepo.get(id);
@@ -166,13 +257,18 @@ public class StoreController {
             return;
         }
         productRepo.remove(id);
-        UndoAction action = new RemoveProductAction(p, productRepo);
+        UndoAction action = new RemoveProductAction(p, productRepo); // Capítulo 10: polimorfismo
         undoStack.push(action);
         view.showMessage("Produto removido.");
     }
 
+    /**
+     * Cria um pedido composto (CompositeOrder), podendo conter itens simples
+     * ou sub-pedidos. Demonstra o padrão Composite (Capítulo 10 – Polimorfismo).
+     * <b>Capítulo 4:</b> while, if-else encadeado, continue.
+     */
     private void createOrder() {
-        CompositeOrder order = new CompositeOrder();
+        CompositeOrder order = new CompositeOrder(); // Capítulo 10: Composite
         boolean addMore = true;
         while (addMore) {
             view.showMessage("\n1. Adicionar item  2. Adicionar sub-pedido  3. Finalizar");
@@ -182,33 +278,38 @@ public class StoreController {
                 Product p = productRepo.get(id);
                 if (p == null) {
                     view.showMessage("Produto não encontrado.");
-                    continue;
+                    continue; // Capítulo 4/5: continue (pula iteração)
                 }
                 int qty = view.readInt("Quantidade: ");
-                if (qty <= 0) {
+                if (qty <= 0) { // Capítulo 4: condição if com operador relacional
                     view.showMessage("Quantidade inválida.");
                     continue;
                 }
-                order.add(new OrderItem(p, qty));
+                order.add(new OrderItem(p, qty)); // Capítulo 10: OrderItem é folha do Composite
                 view.showMessage("Item adicionado.");
             } else if (choice == 2) {
                 view.showMessage("Criando sub-pedido...");
-                // cria um sub-pedido recursivamente
+                // Cria um sub-pedido recursivamente (a estrutura é composta, mas a
+                // construção é iterativa – a recursão ocorre no método de exibição)
                 CompositeOrder subOrder = new CompositeOrder();
-                fillOrder(subOrder);
+                fillOrder(subOrder); // Capítulo 6: chamada de método auxiliar
                 order.add(subOrder);
                 view.showMessage("Sub-pedido adicionado.");
             } else if (choice == 3) {
-                addMore = false;
+                addMore = false; // Capítulo 2: atribuição
             } else {
                 view.showMessage("Opção inválida.");
             }
         }
-        orders.add(order);
+        orders.add(order); // Capítulo 7: adiciona ao ArrayList
         view.showMessage("Pedido finalizado. Resumo:");
-        view.displayOrder(order);
+        view.displayOrder(order); // Capítulo 10: print recursivo da árvore
     }
 
+    /**
+     * Método auxiliar que preenche um sub-pedido com itens.
+     * <b>Capítulo 4:</b> while, if-else.
+     */
     private void fillOrder(CompositeOrder order) {
         boolean adding = true;
         while (adding) {
@@ -228,37 +329,58 @@ public class StoreController {
         }
     }
 
+    /**
+     * Desfaz a última ação registrada (adição ou remoção de produto).
+     * <b>Capítulo 21:</b> pop da pilha personalizada.
+     * <b>Capítulo 10:</b> polimorfismo – {@code UndoAction} é abstrata, executa
+     * {@code undo()}
+     * de acordo com o tipo real.
+     * <b>Capítulo 5:</b> operador ! e método isEmpty().
+     */
     private void undoLastAction() {
-        if (undoStack.isEmpty()) {
+        if (undoStack.isEmpty()) { // Capítulo 21: método isEmpty da pilha
             view.showMessage("Nada a desfazer.");
             return;
         }
-        UndoAction action = undoStack.pop();
-        action.undo();
+        UndoAction action = undoStack.pop(); // Capítulo 21: pop
+        action.undo(); // Capítulo 10: polimorfismo
         view.showMessage("Ação desfeita: " + action.getDescription());
     }
 
+    /**
+     * Demonstra o cálculo de fatorial usando método recursivo.
+     * <b>Capítulo 18 – Recursão:</b> chamada ao método factorial.
+     * <b>Capítulo 4:</b> validação com if e operadores relacionais (&&).
+     */
     private void factorialDemo() {
-        int n = view.readInt("Valor para fatorial (0-20): ");
-        if (n < 0 || n > 20) {
+        int n = view.readInt("Valor para fatorial (0-20): "); // Capítulo 2: entrada int
+        if (n < 0 || n > 20) { // Capítulo 5: operadores lógicos || e &&
             view.showMessage("Intervalo inválido.");
             return;
         }
-        long result = MathUtil.factorial(n);
-        view.showMessage(n + "! = " + result);
+        long result = MathUtil.factorial(n); // Capítulo 18: recursão; Capítulo 6: método estático
+        view.showMessage(n + "! = " + result); // Capítulo 3: concatenação de string
     }
 
+    /**
+     * Demonstra a busca binária recursiva sobre o array de produtos.
+     * <b>Capítulo 18 – Recursão:</b> a busca é implementada recursivamente em
+     * MathUtil.
+     * <b>Capítulo 7:</b> conversão de List para array com toArray.
+     * <b>Capítulo 16:</b> uso de Comparator.comparing para ordenação.
+     * <b>Capítulo 20:</b> método genérico recursiveBinarySearch.
+     */
     private void recursiveBinarySearchDemo() {
-        List<Product> list = productRepo.getAll();
-        if (list.isEmpty()) {
+        List<Product> list = productRepo.getAll(); // Capítulo 16: ArrayList
+        if (list.isEmpty()) { // Capítulo 5: método isEmpty
             view.showMessage("Nenhum produto para buscar.");
             return;
         }
-        Product[] array = list.toArray(new Product[0]);
-        Arrays.sort(array, Comparator.comparing(Product::getId));
+        Product[] array = list.toArray(new Product[0]); // Capítulo 7: conversão para array
+        Arrays.sort(array, Comparator.comparing(Product::getId)); // Capítulo 16: Comparator
         view.showMessage("Produtos ordenados por ID:");
-        for (Product p : array) {
-            System.out.println(p.getId() + " - " + p.getName());
+        for (Product p : array) { // Capítulo 7: for-each
+            System.out.println(p.getId() + " - " + p.getName()); // Capítulo 2: saída (println)
         }
         String keyId = view.readString("ID para buscar: ");
         Product key = productRepo.get(keyId);
@@ -266,8 +388,9 @@ public class StoreController {
             view.showMessage("ID não existe.");
             return;
         }
+        // Capítulo 18 e 20: método recursivo genérico
         int index = MathUtil.recursiveBinarySearch(array, key, 0, array.length - 1);
-        if (index >= 0) {
+        if (index >= 0) { // Capítulo 4: if-else
             view.showMessage("Encontrado na posição " + index + ": " + array[index]);
         } else {
             view.showMessage("Não encontrado (inesperado).");
