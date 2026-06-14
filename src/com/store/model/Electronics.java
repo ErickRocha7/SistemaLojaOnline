@@ -22,9 +22,18 @@ package com.store.model;
  * <li><b>4 – Operadores:</b> expressão aritmética no cálculo do desconto.</li>
  * <li><b>14 – Strings:</b> formatação de string com {@code String.format} e
  * concatenação.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
+ * serialização de
+ * {@code Product}, permitindo que objetos {@code Electronics} sejam persistidos
+ * em
+ * arquivos binários via {@code ObjectOutputStream} e
+ * {@code ObjectInputStream}.</li>
  * </ul>
  */
 public class Electronics extends Product implements Discountable {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 8: encapsulamento – atributos privados
     private String brand; // marca do eletrônico
     private int warrantyMonths; // meses de garantia (Capítulo 2: tipo primitivo int)
