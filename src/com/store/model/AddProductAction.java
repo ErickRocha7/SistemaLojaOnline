@@ -5,10 +5,8 @@ import com.store.repository.GenericRepository;
 /**
  * <h1>Capítulo 10 – Polimorfismo | Capítulo 9 – Herança</h1>
  * Representa uma ação de adicionar um produto ao repositório, que pode ser
- * desfeita.
- * Estende {@code UndoAction} (classe abstrata), implementando o comportamento
- * específico
- * de desfazer a adição (remover o produto).
+ * desfeita. Estende {@code UndoAction} (classe abstrata), implementando o
+ * comportamento específico de desfazer a adição (remover o produto).
  *
  * <h2>Capítulos abordados:</h2>
  * <ul>
@@ -28,9 +26,16 @@ import com.store.repository.GenericRepository;
  * {@code GenericRepository<Product>},
  * que internamente usa coleções genéricas.</li>
  * <li><b>14 – Strings:</b> concatenação de string na descrição.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
+ * serialização
+ * de {@code UndoAction}, permitindo que ações pendentes na pilha de desfazer
+ * sejam persistidas.</li>
  * </ul>
  */
 public class AddProductAction extends UndoAction {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 8: atributos final (imutáveis após construção)
     private final Product product; // Capítulo 9/10: referência à superclasse Product
     private final GenericRepository<Product> repository; // Capítulo 16: repositório genérico
@@ -40,7 +45,8 @@ public class AddProductAction extends UndoAction {
      * inserido.
      * <b>Capítulo 8:</b> {@code this.product = product;} resolve conflito de nomes.
      * <b>Capítulo 9:</b> {@code super()} é chamado implicitamente para a classe
-     * base {@code UndoAction}.
+     * base
+     * {@code UndoAction}.
      *
      * @param product    produto que foi adicionado
      * @param repository repositório onde a operação ocorreu
