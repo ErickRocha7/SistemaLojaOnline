@@ -1,5 +1,7 @@
 package com.store.model;
 
+import java.io.Serializable;
+
 /**
  * <h1>Capítulo 10 – Polimorfismo (padrão Composite)</h1>
  * Classe abstrata que define a interface comum para todos os componentes de um
@@ -23,9 +25,17 @@ package com.store.model;
  * {@code UnsupportedOperationException}
  * no método {@code add} para classes que não suportam a operação.</li>
  * <li><b>6 – Métodos:</b> definição de métodos abstratos e concretos.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> agora implementa
+ * {@code Serializable}
+ * para permitir que toda a hierarquia de pedidos (itens e compostos) seja
+ * persistida
+ * em arquivos binários.</li>
  * </ul>
  */
-public abstract class OrderComponent {
+public abstract class OrderComponent implements Serializable {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     /**
      * Retorna o preço total deste componente.
      * <b>Capítulo 10:</b> método abstrato que será implementado polimorficamente.
