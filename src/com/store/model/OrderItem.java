@@ -19,9 +19,17 @@ package com.store.model;
  * formatada.</li>
  * <li><b>14 – Strings:</b> {@code " ".repeat(indentation)} e formatação com
  * {@code printf}.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
+ * serialização de
+ * {@code OrderComponent}, permitindo que itens de pedido sejam persistidos em
+ * arquivos
+ * binários.</li>
  * </ul>
  */
 public class OrderItem extends OrderComponent {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 8: atributo final (referência imutável ao produto)
     private final Product product;
     // Capítulo 4: atributo de quantidade (pode variar)
