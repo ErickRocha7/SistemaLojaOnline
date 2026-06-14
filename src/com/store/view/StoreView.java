@@ -1,5 +1,6 @@
 package com.store.view;
 
+import com.store.model.OrderComponent;
 import com.store.model.Product;
 import java.util.List;
 import java.util.Scanner;
@@ -18,8 +19,7 @@ import java.util.Scanner;
  * <li><b>3 – Classes, objetos, métodos e strings:</b> criação de classe,
  * instanciação
  * de {@code Scanner}, definição de métodos que retornam valores e recebem
- * parâmetros,
- * manipulação de strings.</li>
+ * parâmetros, manipulação de strings.</li>
  * <li><b>4 – Instruções de controle:</b> loops {@code while} para validação de
  * entrada,
  * laço {@code for} tradicional em {@code displayProducts}.</li>
@@ -33,7 +33,11 @@ import java.util.Scanner;
  * for
  * tradicional e {@code size()}/{@code get()}.</li>
  * <li><b>10 – Polimorfismo:</b> método {@code displayOrder} recebe
- * {@code OrderComponent} e invoca {@code print(0)} polimorficamente.</li>
+ * {@code OrderComponent}
+ * e invoca {@code print(0)} polimorficamente.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> menus atualizados incluem
+ * opções
+ * para salvar dados e importar arquivos CSV.</li>
  * </ul>
  */
 public class StoreView {
@@ -53,6 +57,8 @@ public class StoreView {
      * <b>Capítulo 2:</b> {@code System.out.println} para montar o menu.
      * <b>Capítulo 3:</b> strings com quebras de linha (\n).
      * <b>Capítulo 6:</b> chamada ao método {@code readInt}.
+     * <b>Capítulo 15:</b> inclui opções para salvar dados manualmente e sair
+     * salvando.
      */
     public int showMainMenu() {
         System.out.println("\n==== MENU PRINCIPAL ====");
@@ -61,12 +67,14 @@ public class StoreView {
         System.out.println("3. Desfazer Última Ação");
         System.out.println("4. Exibir Fatorial (recursão)");
         System.out.println("5. Buscar produto (busca binária recursiva)");
-        System.out.println("6. Sair");
+        System.out.println("6. Salvar dados em arquivo");
+        System.out.println("7. Salvar e Sair");
         return readInt("Escolha uma opção: ");
     }
 
     /**
      * Exibe o submenu de produtos e retorna a opção.
+     * <b>Capítulo 15:</b> inclui opção para importar CSV.
      */
     public int showProductMenu() {
         System.out.println("\n--- Produtos ---");
@@ -76,7 +84,8 @@ public class StoreView {
         System.out.println("4. Buscar por Palavra-chave");
         System.out.println("5. Aplicar Desconto");
         System.out.println("6. Remover Produto");
-        System.out.println("7. Voltar");
+        System.out.println("7. Importar produtos de CSV");
+        System.out.println("8. Voltar");
         return readInt("Opção: ");
     }
 
@@ -135,8 +144,8 @@ public class StoreView {
      * <b>Capítulo 4:</b> laço {@code for} tradicional com inicialização, condição e
      * incremento ({@code i++}).
      * <b>Capítulo 10:</b> polimorfismo: cada objeto {@code Product} imprime sua
-     * própria descrição via
-     * {@code toString()}.
+     * própria
+     * descrição via {@code toString()}.
      */
     public void displayProducts(List<Product> products) {
         if (products.isEmpty()) { // Capítulo 7: método isEmpty
@@ -151,7 +160,8 @@ public class StoreView {
     /**
      * Exibe um único produto.
      * <b>Capítulo 10:</b> {@code println(p)} invoca implicitamente
-     * {@code toString()} polimórfico.
+     * {@code toString()}
+     * polimórfico.
      */
     public void displayProduct(Product p) {
         System.out.println(p);
@@ -160,10 +170,9 @@ public class StoreView {
     /**
      * Exibe a estrutura completa de um pedido (composto ou item).
      * <b>Capítulo 10 – Polimorfismo:</b> recebe {@code OrderComponent} e chama
-     * {@code print},
-     * que se comporta diferentemente para folhas e compostos.
+     * {@code print}, que se comporta diferentemente para folhas e compostos.
      */
-    public void displayOrder(com.store.model.OrderComponent order) {
+    public void displayOrder(OrderComponent order) {
         order.print(0); // Capítulo 10: polimorfismo
     }
 }
