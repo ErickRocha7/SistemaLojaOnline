@@ -10,11 +10,10 @@ package com.store.model;
  * <li><b>9 – Herança:</b> {@code Book} herda de {@code Product} (classe
  * abstrata).
  * Usa {@code super()} para invocar o construtor da superclasse e
- * {@code super.toString()}
- * para reaproveitar a representação textual.</li>
+ * {@code super.toString()} para reaproveitar a representação textual.</li>
  * <li><b>10 – Polimorfismo:</b> implementa {@code Discountable}, permitindo que
- * livros sejam
- * tratados como descontáveis (referência polimórfica).</li>
+ * livros
+ * sejam tratados como descontáveis (referência polimórfica).</li>
  * <li><b>8 – Classes e objetos:</b> atributos privados {@code author} e
  * {@code isbn},
  * encapsulamento com getters, construtor com parâmetros e uso de
@@ -25,9 +24,17 @@ package com.store.model;
  * de strings.</li>
  * <li><b>4 – Operadores:</b> operadores aritméticos e parênteses na fórmula do
  * desconto.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
+ * serialização de
+ * {@code Product}, permitindo que objetos {@code Book} sejam persistidos em
+ * arquivos
+ * binários via {@code ObjectOutputStream} e {@code ObjectInputStream}.</li>
  * </ul>
  */
 public class Book extends Product implements Discountable {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 8: atributos privados – encapsulamento
     private String author;
     private String isbn;
