@@ -5,10 +5,8 @@ import com.store.repository.GenericRepository;
 /**
  * <h1>Capítulo 10 – Polimorfismo | Capítulo 9 – Herança</h1>
  * Representa a ação de remover um produto do repositório, que pode ser
- * desfeita.
- * Estende {@code UndoAction} e implementa o comportamento de desfazer a
- * remoção,
- * ou seja, adicionar o produto de volta.
+ * desfeita. Estende {@code UndoAction} e implementa o comportamento de
+ * desfazer a remoção, ou seja, adicionar o produto de volta.
  *
  * <h2>Capítulos abordados:</h2>
  * <ul>
@@ -24,9 +22,16 @@ import com.store.repository.GenericRepository;
  * {@code GenericRepository<Product>} que
  * internamente usa coleções genéricas.</li>
  * <li><b>14/Strings:</b> concatenação de strings na descrição.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
+ * serialização
+ * de {@code UndoAction}, permitindo que ações pendentes na pilha de desfazer
+ * sejam persistidas.</li>
  * </ul>
  */
 public class RemoveProductAction extends UndoAction {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 8: atributos final – imutáveis após construção
     private final Product product;
     private final GenericRepository<Product> repository;
