@@ -1,5 +1,6 @@
 package com.store.model;
 
+import java.io.Serializable; // Capítulo 15: interface de serialização
 import java.util.regex.Pattern;
 
 /**
@@ -23,17 +24,23 @@ import java.util.regex.Pattern;
  * {@code <T extends Comparable<T>>},
  * como {@code MathUtil.recursiveBinarySearch}.</li>
  * <li><b>16 – Coleções genéricas:</b> a ordenação natural via
- * {@code Comparable} é usada
- * por métodos como {@code Collections.sort} (sem {@code Comparator}).</li>
+ * {@code Comparable} é usada por
+ * métodos como {@code Collections.sort} (sem {@code Comparator}).</li>
  * <li><b>8 – Classes e objetos:</b> atributos estáticos, finais,
  * encapsulamento, {@code this}.</li>
  * <li><b>4 – Operadores:</b> pós-incremento ({@code nextId++}).</li>
  * <li><b>6 – Métodos:</b> getters, setters, {@code compareTo}.</li>
  * <li><b>14 – Strings e expressões regulares:</b> {@code Pattern},
  * {@code Matcher}, {@code String.format}.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> agora implementa
+ * {@code Serializable}
+ * para permitir a persistência de objetos em arquivos binários.</li>
  * </ul>
  */
-public abstract class Product implements Identifiable, Searchable, Comparable<Product> {
+public abstract class Product implements Identifiable, Searchable, Comparable<Product>, Serializable {
+    // Capítulo 15: identificador de versão de serialização (boa prática)
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 8: membro static para IDs sequenciais
     private static int nextId = 1;
 
