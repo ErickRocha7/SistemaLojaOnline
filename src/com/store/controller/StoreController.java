@@ -2,13 +2,14 @@ package com.store.controller;
 
 import com.store.datastructure.Stack;
 import com.store.exception.ProductNotFoundException;
-import com.store.exception.InsufficientStockException;
 import com.store.model.*;
 import com.store.repository.GenericRepository;
+import com.store.util.FileManager;
 import com.store.util.MathUtil;
 import com.store.util.StringUtil;
 import com.store.view.StoreView;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -38,6 +39,9 @@ import java.util.*;
  * <li><b>Capítulo 11:</b> Tratamento de exceções com try-catch, throw e
  * exceções customizadas.</li>
  * <li><b>Capítulo 14:</b> Busca com regex via método matchesKeyword.</li>
+ * <li><b>Capítulo 15:</b> Persistência de dados em arquivos via FileManager
+ * (serialização binária)
+ * e importação de CSV com Scanner + File.</li>
  * <li><b>Capítulo 16:</b> Coleções genéricas (ArrayList,
  * Comparator.comparing).</li>
  * <li><b>Capítulo 18:</b> Recursão (fatorial e busca binária recursiva).</li>
@@ -49,9 +53,13 @@ import java.util.*;
 public class StoreController {
     // Capítulo 8: atributos final (constantes de referência)
     private final StoreView view;
-    private final GenericRepository<Product> productRepo;
+    private GenericRepository<Product> productRepo;
     private final Stack<UndoAction> undoStack; // Capítulo 21: estrutura genérica personalizada
-    private final List<OrderComponent> orders; // Capítulo 7 e 16: ArrayList (listas genéricas)
+    private List<OrderComponent> orders; // Capítulo 7 e 16: ArrayList (listas genéricas)
+
+    // Capítulo 15: nomes dos arquivos de persistência (constantes)
+    private static final String PRODUCTS_FILE = "produtos.dat";
+    private static final String ORDERS_FILE = "pedidos.dat";
 
     /**
      * Construtor padrão.
@@ -70,8 +78,12 @@ public class StoreController {
      * <b>Capítulo 4:</b> loop while, switch-case.
      * <b>Capítulo 5:</b> operador lógico ! (NOT) em !exit.
      * <b>Capítulo 11:</b> bloco try-catch genérico para capturar exceções.
+     * <b>Capítulo 15:</b> carrega dados salvos no início e salva ao sair.
      */
     public void run() {
+        // Capítulo 15: carrega dados persistentes (produtos e pedidos)
+        loadData();
+
         boolean exit = false; // Capítulo 2: declaração e inicialização de variável
         while (!exit) { // Capítulo 4: while; Capítulo 5: !
             try {
@@ -93,6 +105,10 @@ public class StoreController {
                         recursiveBinarySearchDemo();
                         break;
                     case 6:
+                        saveDataManually(); // Capítulo 15: salvamento manual
+                        break;
+                    case 7:
+                        saveDataOnExit(); // Capítulo 15: salva e sai
                         exit = true; // Capítulo 2: atribuição
                         break;
                     default: // Capítulo 4: cláusula default
@@ -105,8 +121,58 @@ public class StoreController {
     }
 
     /**
+     * Carrega os dados persistentes (produtos e pedidos) dos arquivos.
+     * <b>Capítulo 15:</b> utiliza FileManager para desserializar objetos.
+     * <b>Capítulo 11:</b> tratamento de exceções com multi-catch.
+     */
+    private void loadData() {
+        try {
+            // Capítulo 15: carrega produtos do arquivo binário
+            productRepo = FileManager.loadProducts(PRODUCTS_FILE);
+            // Capítulo 15: carrega pedidos do arquivo binário
+            orders = FileManager.loadOrders(ORDERS_FILE);
+            view.showMessage("Dados carregados com sucesso. " +
+                    productRepo.getAll().size() + " produto(s) e " +
+                    orders.size() + " pedido(s) encontrado(s).");
+        } catch (IOException | ClassNotFoundException e) { // Capítulo 11: multi-catch
+            view.showMessage("Não foi possível carregar dados anteriores. " +
+                    "Iniciando com dados vazios.");
+            // Capítulo 3: criação de novos objetos
+            productRepo = new GenericRepository<>();
+            orders = new ArrayList<>();
+        }
+    }
+
+    /**
+     * Salva os dados atuais nos arquivos (opção explícita do menu).
+     * <b>Capítulo 15:</b> utiliza FileManager para serializar objetos.
+     */
+    private void saveDataManually() {
+        try {
+            // Capítulo 15: salva produtos
+            FileManager.saveProducts(productRepo, PRODUCTS_FILE);
+            // Capítulo 15: salva pedidos
+            FileManager.saveOrders(orders, ORDERS_FILE);
+            view.showMessage("Dados salvos com sucesso em '" + PRODUCTS_FILE +
+                    "' e '" + ORDERS_FILE + "'.");
+        } catch (IOException e) { // Capítulo 11: captura de exceção de E/S
+            view.showMessage("Erro ao salvar: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Salva os dados antes de sair da aplicação.
+     * <b>Capítulo 6:</b> método privado auxiliar.
+     */
+    private void saveDataOnExit() {
+        saveDataManually();
+        view.showMessage("Encerrando o sistema...");
+    }
+
+    /**
      * Submenu de gerenciamento de produtos.
      * <b>Capítulo 4:</b> while, switch.
+     * <b>Capítulo 15:</b> inclui opção para importar CSV.
      */
     private void manageProducts() {
         boolean back = false;
@@ -132,6 +198,9 @@ public class StoreController {
                     removeProduct();
                     break;
                 case 7:
+                    importProductsFromCSV(); // Capítulo 15: nova opção
+                    break;
+                case 8:
                     back = true;
                     break;
                 default:
@@ -263,6 +332,22 @@ public class StoreController {
     }
 
     /**
+     * Importa produtos de um arquivo CSV usando Scanner + File.
+     * <b>Capítulo 15:</b> leitura de arquivo texto com Scanner.
+     * <b>Capítulo 11:</b> tratamento de exceção de E/S.
+     */
+    private void importProductsFromCSV() {
+        String filename = view.readString("Caminho do arquivo CSV: "); // Capítulo 2: entrada de string
+        try {
+            // Capítulo 15: importação via FileManager
+            int count = FileManager.importFromCSV(filename, productRepo);
+            view.showMessage("Importação concluída. " + count + " produto(s) adicionado(s).");
+        } catch (IOException e) { // Capítulo 11: captura de exceção
+            view.showMessage("Erro na importação: " + e.getMessage());
+        }
+    }
+
+    /**
      * Cria um pedido composto (CompositeOrder), podendo conter itens simples
      * ou sub-pedidos. Demonstra o padrão Composite (Capítulo 10 – Polimorfismo).
      * <b>Capítulo 4:</b> while, if-else encadeado, continue.
@@ -333,8 +418,7 @@ public class StoreController {
      * Desfaz a última ação registrada (adição ou remoção de produto).
      * <b>Capítulo 21:</b> pop da pilha personalizada.
      * <b>Capítulo 10:</b> polimorfismo – {@code UndoAction} é abstrata, executa
-     * {@code undo()}
-     * de acordo com o tipo real.
+     * {@code undo()} de acordo com o tipo real.
      * <b>Capítulo 5:</b> operador ! e método isEmpty().
      */
     private void undoLastAction() {
