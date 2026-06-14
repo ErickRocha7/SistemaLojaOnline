@@ -6,8 +6,8 @@ import java.util.List;
 /**
  * <h1>Capítulo 10 – Polimorfismo (padrão Composite)</h1>
  * Representa um pedido composto, que pode conter itens simples
- * ({@code OrderItem})
- * ou outros pedidos compostos, formando uma estrutura em árvore.
+ * ({@code OrderItem}) ou outros pedidos compostos, formando uma estrutura em
+ * árvore.
  *
  * <h2>Capítulos abordados:</h2>
  * <ul>
@@ -31,9 +31,17 @@ import java.util.List;
  * formatada.</li>
  * <li><b>14 – Strings:</b> método {@code repeat} para indentação, formatação
  * com {@code printf}.</li>
+ * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
+ * serialização de
+ * {@code OrderComponent}, permitindo que pedidos compostos completos (incluindo
+ * toda a
+ * árvore de subpedidos e itens) sejam persistidos em arquivos binários.</li>
  * </ul>
  */
 public class CompositeOrder extends OrderComponent {
+    // Capítulo 15: identificador de versão de serialização
+    private static final long serialVersionUID = 1L;
+
     // Capítulo 7: ArrayList para armazenar componentes
     // Capítulo 8: atributo final (referência não pode ser alterada)
     private final List<OrderComponent> components = new ArrayList<>();
@@ -73,8 +81,7 @@ public class CompositeOrder extends OrderComponent {
      * impressão
      * é realizada de forma iterativa/recursiva indireta, pois cada componente filho
      * invoca seu próprio método {@code print} (que pode ser de outro composto,
-     * chamando
-     * novamente).
+     * chamando novamente).
      * <b>Capítulo 4/5:</b> laço for-each para percorrer os componentes.
      * <b>Capítulo 2:</b> {@code System.out.printf} para saída formatada.
      * <b>Capítulo 14:</b> {@code " ".repeat(indentation)} – método {@code repeat}
