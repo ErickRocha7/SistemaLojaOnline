@@ -17,27 +17,21 @@ import java.util.Scanner;
  * {@code Scanner} para leitura do teclado, métodos {@code System.out.print},
  * {@code println} e {@code printf} para saída formatada.</li>
  * <li><b>3 – Classes, objetos, métodos e strings:</b> criação de classe,
- * instanciação
- * de {@code Scanner}, definição de métodos que retornam valores e recebem
- * parâmetros, manipulação de strings.</li>
+ * instanciação de {@code Scanner}, definição de métodos que retornam valores e
+ * recebem parâmetros, manipulação de strings.</li>
  * <li><b>4 – Instruções de controle:</b> loops {@code while} para validação de
- * entrada,
- * laço {@code for} tradicional em {@code displayProducts}.</li>
+ * entrada, laço {@code for} tradicional em {@code displayProducts}.</li>
  * <li><b>5 – Operadores lógicos:</b> uso de {@code !} (negação) nas validações
  * de
  * entrada ({@code !scanner.hasNextInt()}).</li>
  * <li><b>6 – Métodos:</b> sobrecarga implícita nos diferentes métodos de
- * leitura
- * ({@code readInt}, {@code readDouble}, {@code readString}).</li>
+ * leitura ({@code readInt}, {@code readDouble}, {@code readString}).</li>
  * <li><b>7 – Arrays e ArrayLists:</b> recebe {@code List<Product>} e itera com
- * for
- * tradicional e {@code size()}/{@code get()}.</li>
+ * for tradicional e {@code size()}/{@code get()}.</li>
  * <li><b>10 – Polimorfismo:</b> método {@code displayOrder} recebe
- * {@code OrderComponent}
- * e invoca {@code print(0)} polimorficamente.</li>
+ * {@code OrderComponent} e invoca {@code print(0)} polimorficamente.</li>
  * <li><b>15 – Arquivos, fluxos e serialização:</b> menus atualizados incluem
- * opções
- * para salvar dados e importar arquivos CSV.</li>
+ * opções para salvar dados e importar arquivos CSV.</li>
  * </ul>
  */
 public class StoreView {
@@ -144,8 +138,7 @@ public class StoreView {
      * <b>Capítulo 4:</b> laço {@code for} tradicional com inicialização, condição e
      * incremento ({@code i++}).
      * <b>Capítulo 10:</b> polimorfismo: cada objeto {@code Product} imprime sua
-     * própria
-     * descrição via {@code toString()}.
+     * própria descrição via {@code toString()}.
      */
     public void displayProducts(List<Product> products) {
         if (products.isEmpty()) { // Capítulo 7: método isEmpty
@@ -160,8 +153,7 @@ public class StoreView {
     /**
      * Exibe um único produto.
      * <b>Capítulo 10:</b> {@code println(p)} invoca implicitamente
-     * {@code toString()}
-     * polimórfico.
+     * {@code toString()} polimórfico.
      */
     public void displayProduct(Product p) {
         System.out.println(p);
@@ -174,5 +166,14 @@ public class StoreView {
      */
     public void displayOrder(OrderComponent order) {
         order.print(0); // Capítulo 10: polimorfismo
+    }
+
+    /**
+     * Fecha o Scanner associado à entrada padrão, liberando o recurso.
+     * Deve ser chamado ao encerrar o programa.
+     * <b>Capítulo 11/15:</b> boa prática de liberação de recursos de E/S.
+     */
+    public void close() {
+        scanner.close();
     }
 }

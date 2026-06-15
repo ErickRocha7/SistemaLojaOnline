@@ -40,8 +40,7 @@ import java.util.*;
  * exceções customizadas.</li>
  * <li><b>Capítulo 14:</b> Busca com regex via método matchesKeyword.</li>
  * <li><b>Capítulo 15:</b> Persistência de dados em arquivos via FileManager
- * (serialização binária)
- * e importação de CSV com Scanner + File.</li>
+ * (serialização binária) e importação de CSV com Scanner + File.</li>
  * <li><b>Capítulo 16:</b> Coleções genéricas (ArrayList,
  * Comparator.comparing).</li>
  * <li><b>Capítulo 18:</b> Recursão (fatorial e busca binária recursiva).</li>
@@ -79,44 +78,50 @@ public class StoreController {
      * <b>Capítulo 5:</b> operador lógico ! (NOT) em !exit.
      * <b>Capítulo 11:</b> bloco try-catch genérico para capturar exceções.
      * <b>Capítulo 15:</b> carrega dados salvos no início e salva ao sair.
+     * <b>Refatoração:</b> garante o fechamento do Scanner da view no bloco finally.
      */
     public void run() {
         // Capítulo 15: carrega dados persistentes (produtos e pedidos)
         loadData();
 
         boolean exit = false; // Capítulo 2: declaração e inicialização de variável
-        while (!exit) { // Capítulo 4: while; Capítulo 5: !
-            try {
-                int option = view.showMainMenu(); // Capítulo 2: entrada de dados via teclado (Scanner interno)
-                switch (option) { // Capítulo 4: switch
-                    case 1:
-                        manageProducts();
-                        break; // Capítulo 4: break
-                    case 2:
-                        createOrder();
-                        break;
-                    case 3:
-                        undoLastAction();
-                        break;
-                    case 4:
-                        factorialDemo();
-                        break;
-                    case 5:
-                        recursiveBinarySearchDemo();
-                        break;
-                    case 6:
-                        saveDataManually(); // Capítulo 15: salvamento manual
-                        break;
-                    case 7:
-                        saveDataOnExit(); // Capítulo 15: salva e sai
-                        exit = true; // Capítulo 2: atribuição
-                        break;
-                    default: // Capítulo 4: cláusula default
-                        view.showMessage("Opção inválida!");
+        try {
+            while (!exit) { // Capítulo 4: while; Capítulo 5: !
+                try {
+                    int option = view.showMainMenu(); // Capítulo 2: entrada de dados via teclado (Scanner interno)
+                    switch (option) { // Capítulo 4: switch
+                        case 1:
+                            manageProducts();
+                            break; // Capítulo 4: break
+                        case 2:
+                            createOrder();
+                            break;
+                        case 3:
+                            undoLastAction();
+                            break;
+                        case 4:
+                            factorialDemo();
+                            break;
+                        case 5:
+                            recursiveBinarySearchDemo();
+                            break;
+                        case 6:
+                            saveDataManually(); // Capítulo 15: salvamento manual
+                            break;
+                        case 7:
+                            saveDataOnExit(); // Capítulo 15: salva e sai
+                            exit = true; // Capítulo 2: atribuição
+                            break;
+                        default: // Capítulo 4: cláusula default
+                            view.showMessage("Opção inválida!");
+                    }
+                } catch (Exception e) { // Capítulo 11: captura de exceção
+                    view.showMessage("Erro: " + e.getMessage()); // Capítulo 3: concatenação de strings
                 }
-            } catch (Exception e) { // Capítulo 11: captura de exceção
-                view.showMessage("Erro: " + e.getMessage()); // Capítulo 3: concatenação de strings
             }
+        } finally {
+            // Fecha o Scanner para liberar os recursos do System.in
+            view.close();
         }
     }
 
