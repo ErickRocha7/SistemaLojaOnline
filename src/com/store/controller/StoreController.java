@@ -79,7 +79,8 @@ public class StoreController {
      * <b>Capítulo 11:</b> bloco try-catch genérico para capturar exceções.
      * <b>Capítulo 15:</b> carrega dados salvos no início e salva ao sair.
      * <b>Refatoração:</b> utiliza try-finally para garantir que o Scanner
-     * seja encerrado via {@code view.shutdown()}.
+     * seja encerrado via {@code view.shutdown()}. O tratamento de exceções
+     * agora exibe o stack trace, auxiliando na depuração sem mascarar erros.
      */
     public void run() {
         // Capítulo 15: carrega dados persistentes (produtos e pedidos)
@@ -118,6 +119,7 @@ public class StoreController {
                     }
                 } catch (Exception e) { // Capítulo 11: captura de exceção
                     view.showMessage("Erro: " + e.getMessage()); // Capítulo 3: concatenação de strings
+                    e.printStackTrace(); // Loga o stack trace para diagnóstico
                 }
             }
         } finally {
