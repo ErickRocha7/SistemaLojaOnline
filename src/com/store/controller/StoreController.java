@@ -257,9 +257,12 @@ public class StoreController {
     }
 
     /**
-     * Busca produto por ID e exibe. Se não encontrado, lança exceção customizada.
-     * <b>Capítulo 11:</b> throw e catch de ProductNotFoundException.
-     * <b>Capítulo 4:</b> if-else.
+     * Busca produto por ID e exibe. Se não encontrado, informa o usuário.
+     * <b>Refatoração:</b> substituído o lançamento e captura artificial
+     * de {@code ProductNotFoundException} por uma simples exibição de
+     * mensagem, já que a exceção não era propagada para camada superior.
+     * <b>Capítulo 4:</b> if-else para verificar existência.
+     * <b>Capítulo 14:</b> o ID é tratado como String.
      */
     private void searchById() {
         String id = view.readString("ID do produto: ");
@@ -267,11 +270,7 @@ public class StoreController {
         if (p != null) { // Capítulo 5: operador !=
             view.displayProduct(p);
         } else {
-            try {
-                throw new ProductNotFoundException(id); // Capítulo 11: lançamento de exceção
-            } catch (ProductNotFoundException e) { // Capítulo 11: captura
-                view.showMessage(e.getMessage());
-            }
+            view.showMessage("Produto com ID " + id + " não encontrado.");
         }
     }
 
