@@ -1,6 +1,6 @@
 package com.store.model;
 
-import java.io.Serializable; // Capítulo 15: interface de serialização
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
@@ -8,8 +8,7 @@ import java.util.regex.Pattern;
  * Genéricos</h1>
  * Classe abstrata que representa um produto genérico na loja.
  * Implementa as interfaces {@code Identifiable}, {@code Searchable} e agora
- * também
- * {@code Comparable<Product>}, permitindo que produtos sejam comparados
+ * também {@code Comparable<Product>}, permitindo que produtos sejam comparados
  * naturalmente pelo ID.
  *
  * <h2>Capítulos abordados:</h2>
@@ -21,8 +20,8 @@ import java.util.regex.Pattern;
  * <li><b>20 – Genéricos:</b> implementa {@code Comparable<Product>},
  * possibilitando que
  * produtos sejam usados em métodos genéricos restritos a
- * {@code <T extends Comparable<T>>},
- * como {@code MathUtil.recursiveBinarySearch}.</li>
+ * {@code <T extends Comparable<T>>}, como
+ * {@code MathUtil.recursiveBinarySearch}.</li>
  * <li><b>16 – Coleções genéricas:</b> a ordenação natural via
  * {@code Comparable} é usada por
  * métodos como {@code Collections.sort} (sem {@code Comparator}).</li>
@@ -48,6 +47,7 @@ public abstract class Product implements Identifiable, Searchable, Comparable<Pr
     private String name;
     private double price;
     private final Category category;
+    private int stock; // Novo atributo para controle de estoque
 
     /**
      * Construtor da classe abstrata Product.
@@ -61,6 +61,7 @@ public abstract class Product implements Identifiable, Searchable, Comparable<Pr
         this.name = name;
         this.price = price;
         this.category = category;
+        this.stock = 0; // Inicialmente sem estoque
     }
 
     // ---------- Getters e Setters (Capítulo 6) ----------
@@ -88,6 +89,14 @@ public abstract class Product implements Identifiable, Searchable, Comparable<Pr
         return category;
     }
 
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     /**
      * Implementação de {@code Comparable<Product>} – Capítulo 20.
      * Compara produtos pelo ID (ordem lexicográfica natural de String).
@@ -100,7 +109,6 @@ public abstract class Product implements Identifiable, Searchable, Comparable<Pr
      */
     @Override
     public int compareTo(Product other) {
-        // Delega a comparação para String.compareTo (Capítulo 14)
         return this.id.compareTo(other.id);
     }
 
@@ -122,6 +130,6 @@ public abstract class Product implements Identifiable, Searchable, Comparable<Pr
      */
     @Override
     public String toString() {
-        return String.format("[%s] %s (%s) - R$ %.2f", id, name, category, price);
+        return String.format("[%s] %s (%s) - R$ %.2f (Estoque: %d)", id, name, category, price, stock);
     }
 }

@@ -1,6 +1,7 @@
 package com.store.controller;
 
 import com.store.datastructure.Stack;
+import com.store.exception.InsufficientStockException;
 import com.store.exception.ProductNotFoundException;
 import com.store.model.*;
 import com.store.repository.GenericRepository;
@@ -226,12 +227,19 @@ public class StoreController {
      * <b>Capítulo 10:</b> polimorfismo – referência Product pode apontar para Book
      * ou Electronics.
      * <b>Capítulo 21:</b> push na pilha de desfazer (UndoAction).
+     * <b>Refatoração:</b> agora solicita a quantidade inicial em estoque.
      */
     private void addProduct() {
         view.showMessage("\n1. Livro  2. Eletrônico");
         int type = view.readInt("Tipo: "); // Capítulo 2: entrada de inteiro
         String name = view.readString("Nome: "); // Capítulo 2/3: leitura de string
         double price = view.readDouble("Preço: "); // Capítulo 2: leitura de double
+        int initialStock = view.readInt("Quantidade em estoque: ");
+        while (initialStock < 0) {
+            view.showMessage("Estoque não pode ser negativo.");
+            initialStock = view.readInt("Quantidade em estoque: ");
+        }
+
         Product product; // Capítulo 10: referência polimórfica
         if (type == 1) { // Capítulo 4: if-else
             String author = view.readString("Autor: ");
@@ -242,6 +250,7 @@ public class StoreController {
             int warranty = view.readInt("Garantia (meses): ");
             product = new Electronics(name, price, brand, warranty);
         }
+        product.setStock(initialStock);
         productRepo.add(product); // Capítulo 16: coleção genérica
         UndoAction action = new AddProductAction(product, productRepo);
         undoStack.push(action); // Capítulo 21: uso da pilha
@@ -358,6 +367,9 @@ public class StoreController {
      * Cria um pedido composto (CompositeOrder), podendo conter itens simples
      * ou sub-pedidos. Demonstra o padrão Composite (Capítulo 10 – Polimorfismo).
      * <b>Capítulo 4:</b> while, if-else encadeado, continue.
+     * <b>Refatoração:</b> agora verifica a disponibilidade em estoque antes de
+     * adicionar um item, lançando {@link InsufficientStockException} quando a
+     * quantidade solicitada excede o estoque.
      */
     private void createOrder() {
         CompositeOrder order = new CompositeOrder(); // Capítulo 10: Composite
@@ -377,12 +389,20 @@ public class StoreController {
                     view.showMessage("Quantidade inválida.");
                     continue;
                 }
-                order.add(new OrderItem(p, qty)); // Capítulo 10: OrderItem é folha do Composite
-                view.showMessage("Item adicionado.");
+                // Verificação de estoque
+                try {
+                    if (p.getStock() < qty) {
+                        throw new InsufficientStockException(
+                                "Estoque insuficiente de " + p.getName() +
+                                        ". Disponível: " + p.getStock());
+                    }
+                    order.add(new OrderItem(p, qty)); // Capítulo 10: OrderItem é folha do Composite
+                    view.showMessage("Item adicionado.");
+                } catch (InsufficientStockException e) {
+                    view.showMessage(e.getMessage());
+                }
             } else if (choice == 2) {
                 view.showMessage("Criando sub-pedido...");
-                // Cria um sub-pedido recursivamente (a estrutura é composta, mas a
-                // construção é iterativa – a recursão ocorre no método de exibição)
                 CompositeOrder subOrder = new CompositeOrder();
                 fillOrder(subOrder); // Capítulo 6: chamada de método auxiliar
                 order.add(subOrder);
@@ -401,6 +421,8 @@ public class StoreController {
     /**
      * Método auxiliar que preenche um sub-pedido com itens.
      * <b>Capítulo 4:</b> while, if-else.
+     * <b>Refatoração:</b> agora também verifica estoque antes de adicionar,
+     * utilizando {@link InsufficientStockException}.
      */
     private void fillOrder(CompositeOrder order) {
         boolean adding = true;
@@ -414,7 +436,20 @@ public class StoreController {
                     continue;
                 }
                 int qty = view.readInt("Quantidade: ");
-                order.add(new OrderItem(p, qty));
+                if (qty <= 0) {
+                    view.showMessage("Quantidade inválida.");
+                    continue;
+                }
+                try {
+                    if (p.getStock() < qty) {
+                        throw new InsufficientStockException(
+                                "Estoque insuficiente de " + p.getName() +
+                                        ". Disponível: " + p.getStock());
+                    }
+                    order.add(new OrderItem(p, qty));
+                } catch (InsufficientStockException e) {
+                    view.showMessage(e.getMessage());
+                }
             } else {
                 adding = false;
             }
