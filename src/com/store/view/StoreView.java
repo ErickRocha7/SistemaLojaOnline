@@ -169,11 +169,11 @@ public class StoreView {
     }
 
     /**
-     * Fecha o Scanner associado à entrada padrão, liberando o recurso.
-     * Deve ser chamado ao encerrar o programa.
-     * <b>Capítulo 11/15:</b> boa prática de liberação de recursos de E/S.
+     * Encerra o Scanner utilizado para leitura do console, liberando o recurso
+     * de forma segura. Deve ser chamado ao final da execução do programa.
+     * <b>Capítulo 11/15:</b> fechamento de recursos de E/S.
      */
-    public void close() {
+    public void shutdown() {
         scanner.close();
     }
 }

@@ -78,7 +78,8 @@ public class StoreController {
      * <b>Capítulo 5:</b> operador lógico ! (NOT) em !exit.
      * <b>Capítulo 11:</b> bloco try-catch genérico para capturar exceções.
      * <b>Capítulo 15:</b> carrega dados salvos no início e salva ao sair.
-     * <b>Refatoração:</b> garante o fechamento do Scanner da view no bloco finally.
+     * <b>Refatoração:</b> utiliza try-finally para garantir que o Scanner
+     * seja encerrado via {@code view.shutdown()}.
      */
     public void run() {
         // Capítulo 15: carrega dados persistentes (produtos e pedidos)
@@ -121,7 +122,7 @@ public class StoreController {
             }
         } finally {
             // Fecha o Scanner para liberar os recursos do System.in
-            view.close();
+            view.shutdown();
         }
     }
 
