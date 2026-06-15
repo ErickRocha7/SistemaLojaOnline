@@ -12,19 +12,17 @@ import java.util.List;
  * <h2>Capítulos abordados:</h2>
  * <ul>
  * <li><b>10 – Polimorfismo:</b> herda de {@code OrderComponent} (classe
- * abstrata) e
- * sobrescreve métodos para tratar componentes uniformemente (Composite
- * Pattern).</li>
+ * abstrata) e sobrescreve métodos para tratar componentes uniformemente
+ * (Composite Pattern).</li>
  * <li><b>7 – Arrays e ArrayLists:</b> utiliza {@code ArrayList<OrderComponent>}
- * para
- * armazenar os componentes filhos.</li>
+ * para armazenar os componentes filhos.</li>
  * <li><b>16 – Coleções genéricas:</b> {@code ArrayList} é uma coleção
  * genérica.</li>
  * <li><b>8 – Classes e objetos:</b> atributo
  * {@code final List<OrderComponent> components}
  * (referência imutável), inicialização na declaração.</li>
  * <li><b>6 – Métodos:</b> implementação de {@code add}, {@code getPrice},
- * {@code print}.</li>
+ * {@code print}, e agora {@code isEmpty}.</li>
  * <li><b>4/5 – Controle:</b> laço {@code for} (enhanced for) em
  * {@code print}.</li>
  * <li><b>2 – Entrada/saída:</b> {@code System.out.printf} para saída
@@ -32,10 +30,8 @@ import java.util.List;
  * <li><b>14 – Strings:</b> método {@code repeat} para indentação, formatação
  * com {@code printf}.</li>
  * <li><b>15 – Arquivos, fluxos e serialização:</b> herda a capacidade de
- * serialização de
- * {@code OrderComponent}, permitindo que pedidos compostos completos (incluindo
- * toda a
- * árvore de subpedidos e itens) sejam persistidos em arquivos binários.</li>
+ * serialização de {@code OrderComponent}, permitindo que pedidos compostos
+ * completos sejam persistidos.</li>
  * </ul>
  */
 public class CompositeOrder extends OrderComponent {
@@ -54,47 +50,49 @@ public class CompositeOrder extends OrderComponent {
      */
     @Override
     public void add(OrderComponent component) {
-        components.add(component); // Capítulo 7: adição a ArrayList
+        components.add(component);
     }
 
     /**
      * Calcula o preço total do pedido composto percorrendo todos os filhos
-     * (folhas e outros compostos) e somando seus preços.
+     * e somando seus preços.
      * <b>Capítulo 10:</b> polimorfismo – cada componente sabe calcular seu próprio
      * preço.
-     * <b>Capítulo 16:</b> uso de stream e method reference
-     * {@code OrderComponent::getPrice}.
+     * <b>Capítulo 16:</b> uso de stream e method reference.
      * <b>Capítulo 6:</b> invocação de método sobre cada objeto da coleção.
      */
     @Override
     public double getPrice() {
-        // Capítulo 16: stream().mapToDouble().sum() – operações em coleções
         return components.stream()
-                .mapToDouble(OrderComponent::getPrice) // Capítulo 6: referência a método
+                .mapToDouble(OrderComponent::getPrice)
                 .sum();
     }
 
     /**
      * Imprime recursivamente a estrutura do pedido composto, indentando conforme a
      * profundidade na árvore.
-     * <b>Capítulo 18 – Recursão:</b> embora a estrutura seja uma árvore, a
-     * impressão
-     * é realizada de forma iterativa/recursiva indireta, pois cada componente filho
-     * invoca seu próprio método {@code print} (que pode ser de outro composto,
-     * chamando novamente).
-     * <b>Capítulo 4/5:</b> laço for-each para percorrer os componentes.
-     * <b>Capítulo 2:</b> {@code System.out.printf} para saída formatada.
-     * <b>Capítulo 14:</b> {@code " ".repeat(indentation)} – método {@code repeat}
-     * de String (Java 11+).
+     * <b>Capítulo 10:</b> polimorfismo – cada componente imprime a si mesmo.
+     * <b>Capítulo 4/5:</b> laço for-each.
+     * <b>Capítulo 2:</b> {@code System.out.printf}.
+     * <b>Capítulo 14:</b> {@code " ".repeat(indentation)}.
      */
     @Override
     public void print(int indentation) {
-        // Capítulo 2: printf com especificadores %s, %.2f e %n
         System.out.printf("%sPedido Composto (Total: R$ %.2f):%n",
                 " ".repeat(indentation), getPrice());
-        for (OrderComponent comp : components) { // Capítulo 7: enhanced for
-            // Capítulo 4: incremento da indentação (indentation + 2)
+        for (OrderComponent comp : components) {
             comp.print(indentation + 2);
         }
+    }
+
+    /**
+     * Verifica se o pedido composto não contém nenhum componente.
+     * <b>Refatoração:</b> método adicionado para evitar a inclusão de
+     * sub‑pedidos vazios.
+     *
+     * @return true se não houver itens ou sub‑pedidos.
+     */
+    public boolean isEmpty() {
+        return components.isEmpty();
     }
 }

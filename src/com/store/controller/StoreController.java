@@ -369,7 +369,8 @@ public class StoreController {
      * <b>Capítulo 4:</b> while, if-else encadeado, continue.
      * <b>Refatoração:</b> agora verifica a disponibilidade em estoque antes de
      * adicionar um item, lançando {@link InsufficientStockException} quando a
-     * quantidade solicitada excede o estoque.
+     * quantidade solicitada excede o estoque. Também impede a inclusão de
+     * sub‑pedidos vazios.
      */
     private void createOrder() {
         CompositeOrder order = new CompositeOrder(); // Capítulo 10: Composite
@@ -405,8 +406,13 @@ public class StoreController {
                 view.showMessage("Criando sub-pedido...");
                 CompositeOrder subOrder = new CompositeOrder();
                 fillOrder(subOrder); // Capítulo 6: chamada de método auxiliar
-                order.add(subOrder);
-                view.showMessage("Sub-pedido adicionado.");
+                // Verifica se o sub-pedido contém ao menos um item
+                if (subOrder.isEmpty()) {
+                    view.showMessage("Sub-pedido vazio ignorado. Adicione pelo menos um item.");
+                } else {
+                    order.add(subOrder);
+                    view.showMessage("Sub-pedido adicionado.");
+                }
             } else if (choice == 3) {
                 addMore = false; // Capítulo 2: atribuição
             } else {
